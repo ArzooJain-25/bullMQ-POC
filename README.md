@@ -51,7 +51,7 @@ Emails sent in background 📧
 | **Backend** | Node.js + TypeScript |
 | **Queue** | BullMQ |
 | **Storage** | Redis |
-| **Email** | Nodemailer (mock/real SMTP) |
+| **Email** | Nodemailer (Gmail SMTP) |
 | **Frontend** | React (simple UI) |
 | **Database** | ❌ Not needed for POC |
 
@@ -107,31 +107,7 @@ cd backend
 npm install
 ```
 
-#### 4. Set Up Environment Variables
-
-```bash
-cd backend
-cp .env.example .env
-```
-
-Edit the `.env` file with your configuration:
-
-```env
-PORT=3000
-REDIS_HOST=localhost
-REDIS_PORT=6379
-
-# For testing, use Ethereal Email (https://ethereal.email/)
-SMTP_HOST=smtp.ethereal.email
-SMTP_PORT=587
-SMTP_USER=your-ethereal-username
-SMTP_PASS=your-ethereal-password
-EMAIL_FROM=noreply@example.com
-```
-
-> 💡 **Tip:** Visit [Ethereal Email](https://ethereal.email/) to get free test SMTP credentials. It's perfect for testing without sending real emails!
-
-#### 5. Start Redis
+#### 4. Start Redis
 
 Make sure Redis is running on your machine:
 
@@ -180,9 +156,9 @@ curl -X POST http://localhost:3000/api/emails/send-bulk \
   -H "Content-Type: application/json" \
   -d '{
     "recipients": [
-      "user1@example.com",
-      "user2@example.com",
-      "user3@example.com"
+      "test1@yopmail.com",
+      "test2@yopmail.com",
+      "test3@yopmail.com"
     ],
     "subject": "Test Bulk Email",
     "body": "This is a test email sent via BullMQ!"
@@ -196,11 +172,13 @@ curl -X POST http://localhost:3000/api/emails/send-bulk \
 3. Body (raw JSON):
 ```json
 {
-  "recipients": ["user1@example.com", "user2@example.com"],
+  "recipients": ["test1@yopmail.com", "test2@yopmail.com"],
   "subject": "Test Email",
   "body": "Hello from BullMQ!"
 }
 ```
+
+> 💡 **Tip:** Use [YOPmail](https://yopmail.com/) to check received emails. Just enter the email address (e.g., test1@yopmail.com) to view the inbox.
 
 ## 📊 How It Works (Deep Dive)
 
@@ -293,8 +271,9 @@ kill -9 <PID>
 ### Email Not Sending
 
 **Solution:**
-- Verify SMTP credentials in `.env`
-- Check Ethereal Email inbox at https://ethereal.email/
+- Verify Gmail SMTP credentials are configured correctly
+- Check YOPmail inbox at https://yopmail.com/
+- Ensure "Less secure app access" is enabled for Gmail (or use App Password)
 - Check worker logs for errors
 
 ## 📖 Key Concepts Explained
@@ -324,16 +303,6 @@ A worker is a separate process that runs in the background, constantly checking 
 - [Redis Quick Start](https://redis.io/docs/getting-started/)
 - [Nodemailer Guide](https://nodemailer.com/about/)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
-
-## 🚧 Next Steps
-
-- [ ] Create React frontend UI
-- [ ] Add job status monitoring
-- [ ] Implement job progress tracking
-- [ ] Add email templates
-- [ ] Add job retry configuration
-- [ ] Add rate limiting
-- [ ] Add job scheduling (delayed jobs)
 
 ## 📝 License
 
